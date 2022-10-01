@@ -1,0 +1,35 @@
+
+lw $t0, 0($zero)     // a
+lw $t1, 4($zero)     // b
+
+bz $t0, return_b   
+
+while:
+           bz $t1, return_a
+           and $t2, $zero
+           add $t2, $t1
+           comp $t3, $t0
+           add $t2, $t3
+           bltz $t2, aGb
+           comp $t3, $t0
+           add $t1, $t3
+           b while
+
+aGb: 
+        comp $t4,  $t1
+        add $t0, $t4
+        b while
+
+return_a:
+         and $v0, $zero  // result stored in $v0
+         add $v0, $t0
+         b exit
+
+return_b:
+         and $v0, $zero  // result stored in $v0
+         add $v0, $t1
+         b exit
+
+exit:
+         b exit                // self loop after computing the final result
+ 

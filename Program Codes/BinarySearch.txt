@@ -1,0 +1,56 @@
+main:
+	compi $t0, 0       //  low = 0
+                   compi $t1,  -9    // high = 9
+                   compi $t8, -25  // key = 25
+                  
+while:
+	compi $t9, 1   
+	add   $t9, $t0 
+	comp $t5, $t1    
+	add $t9, $t5
+                   bltz $t9, iterate   // if low <= high iterate 
+                   compi $v0, 1
+                   b exit                   // else return -1
+                  
+iterate: 
+	compi $t2, 0
+	add $t2, $t0
+	add $t2, $t1
+	shrl $t2, 1         // mid = (low + high)/2
+	
+	and $t7, $zero
+  	add $t7, $t2        // $t7 <-- mid   
+	shll $t2, 2  
+	lw $t3, 0($t2)     // $t3 <-- arr[mid] 
+	
+	compi $t4, 0
+	add $t4, $t8
+	comp $t5, $t3
+                   add $t4, $t5     // $t4 <-- key - arr[mid] 
+                   bltz $t4, case1     // if key < arr[mid] goto case1
+                  
+                   compi $t4, 0
+	add $t4, $t3
+	comp $t5, $t8
+                   add $t4, $t5     // $t4 <-- arr[mid] - key
+                   bltz $t4, case2     // if key > arr[mid] goto case2
+
+                   and $v0, $zero   // $v0 (return value) == mid since key == arr[mid]
+                   add $v0, $t7       
+                   b exit
+
+case1:
+	compi $t1, 1
+	add $t1, $t7
+                   b while
+
+case2:
+	compi $t0, -1
+	add $t0, $t7
+	b while
+
+exit:
+	b exit
+
+
+   
